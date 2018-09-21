@@ -32,7 +32,7 @@ public class BranchAndBound {
     
     public void execute() {
         removeNode(tree);
-        createTree(tree, 0, 0, 0);
+        createTreeRecurs(tree, 0, 0, 0);
         //printTree(tree, 0);
         System.out.println(printSolution(tree, 0));
     }
@@ -41,7 +41,7 @@ public class BranchAndBound {
         data.load(fileName);
     }
     
-    private float createTree(Node t, float weight, float value, int i) {
+    private float createTreeRecurs(Node t, float weight, float value, int i) {
         if (i > data.getLootsSize() - 1) return 0;
         if(weight > data.getW()) return 0;
         
@@ -51,10 +51,10 @@ public class BranchAndBound {
         
         t.addLeftNode();
         float nextWeight = weight + data.getLoot(i).getWeight();
-        leftVal = createTree(t.getLeftNode(), nextWeight, data.getLoot(i).getValue(), j);
+        leftVal = createTreeRecurs(t.getLeftNode(), nextWeight, data.getLoot(i).getValue(), j);
         
         t.addRightNode();
-        rightVal = createTree(t.getRightNode(), weight, 0, j);
+        rightVal = createTreeRecurs(t.getRightNode(), weight, 0, j);
         
         float val = 0;
         if (leftVal > rightVal) {
@@ -72,11 +72,14 @@ public class BranchAndBound {
     }
     
     private void removeNode(Node n) {
+        n = null;
+        /*
         if (null == n) return;
         removeNode(n.getLeftNode());
         removeNode(n.getRightNode());
         n.setLeftNode(null);
         n.setRightNode(null);
+        */
     }
     
     public void printTree(Node n, int i) {

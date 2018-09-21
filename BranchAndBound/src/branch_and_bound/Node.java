@@ -34,6 +34,10 @@ public class Node {
         this.rightNode = n;
     }
     
+    public boolean hasNext() {
+        return ((leftNode != null) || (rightNode != null));
+    }
+    
     public Node getLeftNode() {
         return leftNode;
     }
