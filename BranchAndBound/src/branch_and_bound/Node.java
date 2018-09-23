@@ -12,30 +12,39 @@ package branch_and_bound;
 public class Node {
     private Node leftNode;
     private Node rightNode;
-    private boolean takeLoot;
+    private boolean visited;
     
-    public Node(boolean take) {
+    public Node() {
         this.leftNode = null;
         this.rightNode = null;
-        this.takeLoot = take;
     } 
-    public Node(Node left, Node right, boolean take) {
+    public Node(Node left, Node right) {
         this.leftNode = left;
         this.rightNode = right;
-        this.takeLoot = take;
     }
 
     public void addLeftNode() {
-        Node n = new Node(true);
+        Node n = new Node();
         this.leftNode = n;
     }
     public void addRightNode() {
-        Node n = new Node(false);
+        Node n = new Node();
         this.rightNode = n;
     }
     
+    public void remove() {
+        leftNode.remove();
+        rightNode.remove();
+    }
+    
     public boolean hasNext() {
-        return ((leftNode != null) || (rightNode != null));
+        return (hasLeftNode() || hasRightNode());
+    }
+    public boolean hasLeftNode() {
+        return leftNode != null;
+    }
+    public boolean hasRightNode() {
+        return rightNode != null;
     }
     
     public Node getLeftNode() {
@@ -45,9 +54,9 @@ public class Node {
     public Node getRightNode() {
         return rightNode;
     }
-
-    public boolean getTakeLoot() {
-        return takeLoot;
+    
+    public boolean isVisited() {
+        return visited;
     }
     
     public void setLeftNode(Node leftNode) {
@@ -56,6 +65,10 @@ public class Node {
 
     public void setRightNode(Node rightNode) {
         this.rightNode = rightNode;
+    }
+    
+    public void setVisited(boolean v) {
+        this.visited = v;
     }
     
 }

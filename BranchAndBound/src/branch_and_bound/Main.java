@@ -14,7 +14,7 @@ public class Main {
     private static final String FILEPATH = System.getProperty("user.dir") + "/src/files/";
     
     public static void main(String[] args) {
-        BranchAndBound algo = new BranchAndBound(FILEPATH.concat("sac2.txt"));
+        BranchAndBound algo = new BranchAndBound(FILEPATH.concat("sac3.txt"));
         algo.execute();
     }
 

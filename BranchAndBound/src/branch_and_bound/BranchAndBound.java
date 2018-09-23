@@ -21,89 +21,124 @@ import java.util.logging.Logger;
  */
 public class BranchAndBound {
     
-    private FileLoader data;
-    private Node tree;
+    private final FileLoader data;
+    private final Node tree;
     
     public BranchAndBound(String fileName) {
         this.data = new FileLoader();
         this.data.load(fileName);
-        this.tree = new Node(false);
+        this.tree = new Node();
     }
     
     public void execute() {
-        removeNode(tree);
+        //createTree(tree);
         createTreeRecurs(tree, 0, 0, 0);
         //printTree(tree, 0);
         System.out.println(printSolution(tree, 0));
+        data.printLoots();
     }
     
     public void changeFile(String fileName) {
         data.load(fileName);
     }
+
+    /*
+    private void createTree(Node t) {
+        int i = 0;
+        float totalWeight = 0;
+        float totalValue = 0;
+        
+        while (i >= 0 && i < data.getLootsSize()) {
+            float nextWeight = totalWeight + data.getLoot(i).getWeight();
+            
+            if(t.isVisited()) {
+                
+            }
+            else {
+                
+            }
+            
+            if (totalWeight >= data.getW()) {
+                t = t.getParent();
+                --i;
+                totalWeight -= data.getLoot(i).getWeight();
+                totalValue -= data.getLoot(i).getValue();
+            }
+            else if (t.isVisited()) {
+                
+            }
+            else {
+                if (!t.hasLeftNode()) {
+                    t.addLeftNode();
+                    t = t.getLeftNode();
+                    totalWeight += data.getLoot(i).getWeight();
+                    totalValue += data.getLoot(i).getValue();
+                    ++i;
+                }
+                else if (!t.hasRightNode()) {
+                    t.addRightNode();
+                    t = t.getRightNode();
+                    ++i;
+                }
+            }
+            
+            
+            t.setVisited(true);
+            ++i;
+        }     
+    }*/
     
     private float createTreeRecurs(Node t, float weight, float value, int i) {
-        if (i > data.getLootsSize() - 1) return 0;
+        if (i > data.getLootsSize() - 1) return 0;                 
         if(weight > data.getW()) return 0;
+        if(weight + data.getMinWeight() > data.getW()) return value;
         
         int j = i + 1;
-        float leftVal = 0;
-        float rightVal = 0;
         
         t.addLeftNode();
         float nextWeight = weight + data.getLoot(i).getWeight();
-        leftVal = createTreeRecurs(t.getLeftNode(), nextWeight, data.getLoot(i).getValue(), j);
+        float leftVal = createTreeRecurs(t.getLeftNode(), nextWeight, data.getLoot(i).getValue(), j);
+        
+        if (i == 0) System.out.println(i);
         
         t.addRightNode();
-        rightVal = createTreeRecurs(t.getRightNode(), weight, 0, j);
-        
-        float val = 0;
+        float rightVal = createTreeRecurs(t.getRightNode(), weight, 0, j);
+
         if (leftVal > rightVal) {
-            removeNode(t.getRightNode());
-            t.setRightNode(null);
-            val = leftVal;
+            t.setRightNode(null);   
+            value += leftVal;
         }
         else {
-            removeNode(t.getLeftNode());
             t.setLeftNode(null);
-            val = rightVal;
+            value += rightVal;
         }
         
-        return val + value;
-    }
-    
-    private void removeNode(Node n) {
-        n = null;
-        /*
-        if (null == n) return;
-        removeNode(n.getLeftNode());
-        removeNode(n.getRightNode());
-        n.setLeftNode(null);
-        n.setRightNode(null);
-        */
+        return value;
     }
     
     public void printTree(Node n, int i) {
         int j = i + 1;
         if (n.getLeftNode() != null)
             printTree(n.getLeftNode(), j);
-        System.out.println(i + ": " + n.getTakeLoot());
+        System.out.println(i + ": " );
         if (n.getRightNode() != null)
             printTree(n.getRightNode(), j);
     }
     
     public float printSolution(Node n, int i) {
-        int next = i + 1;
         float value = 0;
         
-        if (n.getLeftNode() != null)
-            value += printSolution(n.getLeftNode(), next);
-        if (n.getTakeLoot()) {
-            System.out.println(data.getLoot(i - 1));
-            value += data.getLoot(i - 1).getValue();
+        while (n.hasNext()) {
+            if (n.hasLeftNode()) {
+                value += data.getLoot(i).getValue();
+                n = n.getLeftNode();
+            }
+            else {
+                n = n.getRightNode();
+            }
+            ++i;
         }
-        if (n.getRightNode() != null)
-            value += printSolution(n.getRightNode(), next);
-        
+
         return value;
     }
     
@@ -111,6 +146,7 @@ public class BranchAndBound {
         
         private String fileName;
         private float W;
+        private float minWeight;
         private ArrayList<Loot> loots;
 
         public void load(String fileName) {
@@ -135,8 +171,10 @@ public class BranchAndBound {
             BufferedReader br = new BufferedReader(new FileReader(this.fileName));
             String line;
             this.W = parseFloat(br.readLine());
+            this.minWeight = W;
             while ((line = br.readLine()) != null) {
                 String str[] = line.split(" ");
+                this.minWeight = Math.min(parseFloat(str[0]), this.minWeight);
                 addLoot(parseFloat(str[0]), parseFloat(str[1]));
             }
         }
@@ -154,6 +192,10 @@ public class BranchAndBound {
 
         public float getW() {
             return W;
+        }
+        
+        public float getMinWeight() {
+            return minWeight;
         }
 
         public ArrayList<Loot> getLoots() {
