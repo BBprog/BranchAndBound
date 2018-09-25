@@ -10,25 +10,30 @@ package branch_and_bound;
  * @author Amelie
  */
 public class Node {
+    private Node parent;
     private Node leftNode;
     private Node rightNode;
     private boolean visited;
+    private float value;
+    private float weight;
+    private float borneSupp;
     
-    public Node() {
+    public static float tmp = 0;
+    
+    public Node(Node parent, float value, float weight) {
+        this.parent = parent;
+        this.value = value;
+        this.weight = weight;
         this.leftNode = null;
         this.rightNode = null;
-    } 
-    public Node(Node left, Node right) {
-        this.leftNode = left;
-        this.rightNode = right;
     }
-
-    public void addLeftNode() {
-        Node n = new Node();
+    
+    public void addLeftNode(float value, float weight) {
+        Node n = new Node(this, value, weight);
         this.leftNode = n;
     }
     public void addRightNode() {
-        Node n = new Node();
+        Node n = new Node(this, 0, 0);
         this.rightNode = n;
     }
     
@@ -59,6 +64,18 @@ public class Node {
         return visited;
     }
     
+    public float getValue() {
+        return value;
+    }
+    
+    public float getWeight() {
+        return weight;
+    }
+    
+    public Node getParent() {
+        return parent;
+    }
+    
     public void setLeftNode(Node leftNode) {
         this.leftNode = leftNode;
     }
@@ -69,6 +86,10 @@ public class Node {
     
     public void setVisited(boolean v) {
         this.visited = v;
+    }
+    
+    public void addValue(float val) {
+        this.value += val;
     }
     
 }
