@@ -72,17 +72,6 @@ public class BranchAndBound {
         return borneSupp;
     }
     
-    /*
-    public void printTree(Node n, int i) {
-        int j = i + 1;
-        if (n.getLeftNode() != null)
-            printTree(n.getLeftNode(), j);
-        System.out.println(i + ": " + n.getValue());
-        if (n.getRightNode() != null)
-            printTree(n.getRightNode(), j);
-    }
-    */
-    
     private class FileLoader {
         
         private String fileName;
