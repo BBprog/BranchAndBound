@@ -36,12 +36,11 @@ public class BranchAndBound {
         if (i > data.getLootsSize() - 1) {
             if (t.tmp < value) {
                 t.tmp = value;
-                System.out.println(value);
             }
             return;
         }
         
-        float borne = calculBorneSupp(i) + value;
+        float borne = calculBorneSupp(i, weight) + value;
         
         if (borne < t.tmp) return;
         
@@ -52,9 +51,9 @@ public class BranchAndBound {
         createTreeRecurs(t.getRightNode(), weight, value, i + 1);
     }
     
-    private float calculBorneSupp(int index) {
+    private float calculBorneSupp(int index, float weight) {
         float borneSupp = 0;
-        float totalWeight = 0;
+        float totalWeight = weight;
         float nextWeight = 0;
         
         for (int i = index; i < data.getLootsSize(); ++i) {
