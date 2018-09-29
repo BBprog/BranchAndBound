@@ -15,12 +15,16 @@ public class Main {
     private static final int nbFiles = 5;
     
     public static void main(String[] args) {
-        BranchAndBound algo = new BranchAndBound(FILEPATH.concat("sac0.txt"));
+        FileLoader data = new FileLoader();
+        BranchAndBound algo = new BranchAndBound(data);
+        
         for (int i = 0; i < nbFiles; ++i) {
             String fileName = "sac" + i + ".txt";
-            algo.changeFile(FILEPATH.concat(fileName));
+            data.setFile(FILEPATH.concat(fileName));
             
             System.out.println("===== FILE " + fileName + " =====");
+            System.out.println("Poids du sac : " + data.getW());
+            System.out.println("Nombre d'objets : " + data.getLootsSize());
             algo.execute();
             System.out.println("");
         }
